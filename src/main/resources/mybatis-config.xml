@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="MockApi" type="com.tmoncorp.admin.model.mock.MockApi"/>
+		<typeAlias alias="Dashboard" type="com.tmoncorp.admin.model.Dashboard"/>
+		<typeAlias alias="Graph" type="com.tmoncorp.admin.model.Graph" />
+		<typeAlias alias="TypeCollection" type="com.tmoncorp.admin.model.TypeCollection" />
+		<typeAlias alias="GraphTypeGroup" type="com.tmoncorp.admin.model.type.GraphTypeGroup" />
+		<typeAlias alias="BaseTypeCategory" type="com.tmoncorp.admin.model.type.BaseTypeCategory" />
+	</typeAliases>
+
+	<typeHandlers>
+		<typeHandler javaType="java.sql.Timestamp" handler="org.apache.ibatis.type.DateTypeHandler" />
+		<typeHandler javaType="java.sql.Time" handler="org.apache.ibatis.type.DateTypeHandler" />
+		<typeHandler javaType="java.sql.Date" handler="org.apache.ibatis.type.DateTypeHandler" />
+	</typeHandlers>
+</configuration>
+
+

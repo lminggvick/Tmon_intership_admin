@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- ticketmonster DB -->
+	<bean id="ticketmonsterDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${ticketmonster.driverClassName}" />
+		<property name="url" value="${ticketmonster.url}" />
+		<property name="username" value="${ticketmonster.username}" />
+		<property name="password" value="${ticketmonster.password}" />
+		<property name="initialSize" value="${ticketmonster.initialSize}" />
+		<property name="maxWait" value="${ticketmonster.maxWait}" />
+		<property name="maxActive" value="${ticketmonster.maxActive}" />
+		<property name="validationQuery" value="${ticketmonster.validationQuery}" />
+		<property name="testOnBorrow" value="${ticketmonster.testOnBorrow}" />
+		<property name="testOnReturn" value="${ticketmonster.testOnReturn}" />
+		<property name="testWhileIdle" value="${ticketmonster.testWhileIdle}" />
+		<property name="maxIdle" value="${ticketmonster.maxIdle}" />
+		<property name="minIdle" value="${ticketmonster.minIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${ticketmonster.timeBetweenEvictionRunsMillis}" />
+	</bean>
+
+
+	<!-- internship DB -->
+	<bean id="internshipDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${internship.driverClassName}" />
+		<property name="url" value="${internship.url}" />
+		<property name="username" value="${internship.username}" />
+		<property name="password" value="${internship.password}" />
+		<property name="initialSize" value="${internship.initialSize}" />
+		<property name="maxWait" value="${internship.maxWait}" />
+		<property name="maxActive" value="${internship.maxActive}" />
+		<property name="validationQuery" value="${internship.validationQuery}" />
+		<property name="testOnBorrow" value="${internship.testOnBorrow}" />
+		<property name="testOnReturn" value="${internship.testOnReturn}" />
+		<property name="testWhileIdle" value="${internship.testWhileIdle}" />
+		<property name="maxIdle" value="${internship.maxIdle}" />
+		<property name="minIdle" value="${internship.minIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${internship.timeBetweenEvictionRunsMillis}" />
+	</bean>
+
+
+	<bean id="ticketmonsterSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ticketmonsterDataSource" />
+		<property name="mapperLocations" value="classpath*:sqlmap/**/*.xml" />
+		<property name="configLocation" value="classpath:/mybatis-config.xml" />
+	</bean>
+
+
+	<bean id="internshipSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="internshipDataSource" />
+		<property name="mapperLocations" value="classpath*:sqlmap/**/*.xml" />
+		<property name="configLocation" value="classpath:/mybatis-config.xml" />
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="internshipDataSource"/>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" mode="proxy" proxy-target-class="true" />
+</beans>

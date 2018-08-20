@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD MAPPER 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tmoncorp.service.dashboard">
+
+	<!-- Mapper -->
+	<resultMap id="Graph" type="Graph">
+		<id property="graphId" column="graph_id"/>
+		<result property="graphName" column="graph_name"/>
+        <result property="graphDescription" column="graph_description"/>
+        <result property="graphType" column="graph_type"/>
+        <result property="baseType.code" column="base_type"/>
+        <result property="dataType" column="data_type"/>
+	</resultMap>
+
+	<resultMap id="TypeCollection" type="TypeCollection">
+		<id property="apiId" column="api_id" />
+		<result property="baseTypeGroup" column="base_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+		<result property="dataType" column="data_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+		<result property="graphTypeGroup" column="graph_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+	</resultMap>
+
+    <resultMap id="BaseTypeCategory" type="BaseTypeCategory">
+        <result property="graphId" column="graph_id" />
+        <result property="categoryKey" column="category_key" />
+        <result property="categoryValue" column="category_value" />
+    </resultMap>
+
+	<resultMap id="dashboardGraphCollection" type="com.tmoncorp.admin.model.DashboardGraphCollection" >
+		<id column="collection_id" property="collectionId" />
+		<result column="dashboard_id" property="dashboardId" />
+		<result column="graph_id" property="graphId" />
+		<result column="graph_detail_type" property="graphSubType" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+	</resultMap>
+
+	<!-- select -->
+	<select id="selectGraph" parameterType="int" resultMap="Graph">
+		SELECT graph_id, graph_name FROM graph WHERE graph_id = #{graphId}
+	</select>
+
+
+	<select id="selectTypeList" parameterType="int" resultMap="TypeCollection">
+		SELECT api_id, base_type, data_type FROM api_type WHERE api_id = #{apiId}
+	</select>
+
+
+	<select id="selectGraphTypeCode" parameterType="map" resultType="java.lang.String">
+		SELECT graph_type FROM api_type WHERE base_type = #{baseTypeCode} AND data_type = #{dataTypeCode}
+	</select>
+
+
+	<select id="selectLastId" resultType="int">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+
+	<select id="selectGraphIdList" parameterType="map" resultType="int">
+		SELECT (graph_id) FROM graph WHERE graph_id<![CDATA[>=]]>#{startIndex} LIMIT #{endIndex}
+	</select>
+
+
+	<select id="getGraphCountByApiId" parameterType="int" resultType="int">
+		SELECT count(*) FROM graph WHERE api_id = #{apiId};
+	</select>
+
+
+	<select id="selectCollectionGraphIdList" parameterType="int" resultType="int">
+		SELECT graph_id FROM dashboard_graph_collection WHERE dashboard_id = #{dashboardId}
+	</select>
+
+    <!-- insert -->
+
+	<insert id="insertGraphByList" parameterType="java.util.List">
+		INSERT INTO graph (api_id, graph_name, graph_type, base_type, data_type, update_date)
+		VALUES
+		<foreach collection="list" item="graph" separator=",">
+			(
+			#{graph.apiId},#{graph.graphName}, #{graph.graphType}, #{graph.baseType.code}, #{graph.dataType}, now()
+			)
+		</foreach>
+	</insert>
+
+
+	<insert id="insertBaseTypeCategoryByList" parameterType="java.util.List">
+		INSERT INTO base_type_category (graph_id, category_key, category_value)
+		VALUES
+		<foreach collection="list" item="BaseTypeCategory" separator=",">
+			(
+			#{BaseTypeCategory.graphId}, #{BaseTypeCategory.categoryKey}, #{BaseTypeCategory.categoryValue}
+			)
+		</foreach>
+	</insert>
+
+	<insert id="insertGraphCollectionByList" parameterType="java.util.List">
+		INSERT INTO dashboard_graph_collection (dashboard_id, graph_id, graph_detail_type)
+		VALUES
+		<foreach collection="list" item="GraphCollection" separator=",">
+			(
+			#{GraphCollection.dashboardId}, #{GraphCollection.graphId}, #{GraphCollection.graphSubType}
+			)
+		</foreach>
+	</insert>
+
+    <!-- update -->
+
+	<update id="updateGraph" parameterType="java.util.List">
+        UPDATE graph SET
+        <foreach collection="list" item="graph" separator=",">
+        graph_name = #{graph.graphName}, graph_description = #{graph.graphDescription}, graph_type = #{graph.graphType}, base_type = #{graph.baseType}, data_type = #{graph.baseType}, graph_update_cycle = #{graph.graphUpdateCycle}, update_date = now()
+        </foreach>
+	</update>
+
+    <!-- delete -->
+
+	<delete id="deleteGraph" parameterType="int">
+		DELETE FROM graph WHERE graph_id = #{graphId}
+	</delete>
+
+
+	<delete id="deleteDashboardGraphCollection" parameterType="int" >
+		DELETE FROM dashboard_graph_collection WHERE dashboard_id = #{dashboardId}
+	</delete>
+
+
+	<delete id="deleteGraphByList" parameterType="int">
+		DELETE FROM graph WHERE graph_id = #{graphId}
+	</delete>
+</mapper>

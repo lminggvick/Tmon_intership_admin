@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD MAPPER 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tmoncorp.service.dashboard">
+
+	<!-- Dashboard Mapper -->
+	<resultMap id="Dashboard" type="Dashboard">
+		<id property="dashboardId" column="dashboard_id"/>
+		<result property="dashboardName" column="dashboard_Name"/>
+		<result property="dashboardDescription" column="dashboard_description"/>
+		<result property="apiId" column="api_id"/>
+	</resultMap>
+
+
+    <!-- select -->
+    <select id="selectDashboard" parameterType="int" resultMap="Dashboard">
+		SELECT dashboard_id, dashboard_name, dashboard_description, api_id
+		FROM dashboard
+		WHERE dashboard_id = #{dashboardId}
+	</select>
+
+    <!-- insert -->
+    <insert id="insertDashboard" parameterType="Dashboard" useGeneratedKeys="true" keyProperty="dashboardId" keyColumn="dashboard_id">
+		INSERT INTO
+			dashboard (dashboard_name, dashboard_description, api_id)
+		VALUES
+			(#{dashboardName}, #{dashboardDescription}, #{apiId})
+	</insert>
+
+    <!-- update -->
+	<update id="updateDashboard" parameterType="Dashboard" useGeneratedKeys="true">
+		UPDATE dashboard
+		SET dashboard_name = #{dashboardName}, dashboard_description = #{dashboardDescription}
+		WHERE dashboard_id = #{dashboardId}
+	</update>
+
+    <!-- delete -->
+	<delete id="deleteDashboard" parameterType="int">
+		DELETE FROM dashboard WHERE dashboard_id = #{dashboardId}
+	</delete>
+	
+	<select id="getDashboardCountByApiId" parameterType="int" resultType="int">
+		SELECT count(*) FROM dashboard WHERE api_id = #{apiId};
+	</select>
+
+	<delete id="deleteGraphCollectionByDashboardId" parameterType="int">
+		DELETE FROM dashboard_graph_collection WHERE dashboard_id = #{dashboardId}
+	</delete>
+
+	<delete id="deleteGraphCollectionByGraphId" parameterType="int">
+		DELETE FROM dashboard_graph_collection WHERE graph_id = #{graphId}
+	</delete>
+
+	<delete id="deleteBaseTypeCategory" parameterType="int">
+		DELETE FROM base_type_category WHERE graph_id = #{graphId}
+	</delete>
+</mapper>

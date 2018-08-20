@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="smilecon.Host">corp.smilecon.co.kr</entry>
+	<entry key="smilecon.EventId">632</entry>
+	<entry key="smilecon.MemberId">tmon</entry>	
+</properties>
